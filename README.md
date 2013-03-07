@@ -2,7 +2,7 @@
 ====================
 Utility libraries for programming in Prolog
 
-### Runnings the tests: ### 
+### Runnings the tests:
 	swipl -s <file>.pl -g "load_test_files([]), run_tests" -t halt
 
 
