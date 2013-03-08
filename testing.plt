@@ -26,6 +26,9 @@ test('should_equal/2: Fails with two unbound variables', fail) :-
 test('should_equal/2: two lists with unbound elemnts fail', fail) :-
 	should_equal( [_A,_B], [_C,_D])
 	.
+test('should_equal/2: with left unbound, right bound should fail', fail ):-
+	should_equal( _A, test_value)
+	.
 
 :- end_tests( testing ).
 

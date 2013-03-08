@@ -35,6 +35,12 @@ print the expected and actual values upon failure.
 %
 % Ensures the bound variables refer to the same value.
 %
+should_equal( A, B ) :-
+	not( ground(A) ),
+	!,
+	write_failure(['Expected ',A,' to be bound and equal to ',B]),
+	fail.
+
 should_equal( Value, Value ) :- ground(Value), !.
 should_equal( ListA, ListB ) :-
 	is_list( ListA ),
@@ -50,9 +56,11 @@ should_equal( ListA, ListB ) :-
 		fail
 	).
 should_equal( A, B ) :-
-	write(' Expected '), write(A), write(' to equal '), write(B),
+	write_failure([' Expected ', A,' to equal ', B]),
 	!, fail
 	.
+write_failure( [] ).
+write_failure( [H|T] ) :- write( H ), write_failure(T).
 
 %% should_unify_with( ?, ? )
 %
@@ -70,11 +78,8 @@ should_unify_with( A, B ) :-
 elements_should_equal( [], [] ) :- !.
 elements_should_equal( [], _ ) :- !, fail.
 elements_should_equal( _, [] ) :- !, fail.
-elements_should_equal( [H1|_], _) :- not(ground(H1)), !, fail.
-elements_should_equal( _, [H2|_]) :- not(ground(H2)), !, fail.
 elements_should_equal( [H1|T1], [H2|T2] ) :-
-	ground(H1), ground(H2),
-	H1 = H2,
+	H1 should_equal H2,
 	elements_should_equal( T1, T2 )
 	.
 
