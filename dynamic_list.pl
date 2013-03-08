@@ -70,6 +70,7 @@ range( Start, End, List ) :-
 % @param InitialState is the seed state passed as the 'current' or 'previous' state to get the state machine rolling.
 % @param List is a list containg the elements to be generated.  Elements are generated according to the contract of binding a variable for freeze/2.
 %
+:- meta_predicate dynamic_list_template( 1, 4, ?, -).
 dynamic_list_template( HasEnded, Next, InitialState, List ) :-
   dynamic_list_iterate( 
   	List, 

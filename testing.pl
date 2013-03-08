@@ -66,7 +66,7 @@ write_failure( [H|T] ) :- write( H ), write_failure(T).
 %
 % Ensures the two given variables may be unified
 %
-should_unify_with( A, B ) :- A = B.
+should_unify_with( A, B ) :- A = B, !.
 should_unify_with( A, B ) :-
 	write(' Expected '), write(A), write(' got '), write( B ),
 	fail

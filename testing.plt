@@ -30,5 +30,12 @@ test('should_equal/2: with left unbound, right bound should fail', fail ):-
 	should_equal( _A, test_value)
 	.
 
+test('should_unify_with/2: with left unbound, right bound should succeed' ):-
+	should_unify_with( _, 12 )
+	.
+test('should_unify_with/2: with left unbound, right bound list' ):-
+	should_unify_with( _, [12,13,14] )
+	.
+
 :- end_tests( testing ).
 
