@@ -43,6 +43,10 @@ test('dynamic_list_template/4: Test list usage for output') :-
 	H = test,
 	Value should_equal H
 	.
+test('dynamic_list_template/4: The list is initial unbound') :-
+	dynamic_list_template( output_done, output_work(_), 1, List),
+	var(List)
+	.
 
 :- end_tests( dynamic_list).
 

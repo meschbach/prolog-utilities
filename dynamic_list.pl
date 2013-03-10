@@ -72,11 +72,13 @@ range( Start, End, List ) :-
 %
 :- meta_predicate dynamic_list_template( 1, 4, ?, -).
 dynamic_list_template( HasEnded, Next, InitialState, List ) :-
-  dynamic_list_iterate( 
-  	List, 
-  	dynamic_list_state( HasEnded, Next ),
-  	InitialState
-  )
+	freeze( List,
+		dynamic_list_iterate(
+			List,
+			dynamic_list_state( HasEnded, Next ),
+			InitialState
+		)
+	)
 	.
 %
 % Attmepts to terminate the given list, if our HasEnded predicate succeeds.
