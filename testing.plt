@@ -18,23 +18,23 @@
 :- use_module( testing ).
 
 test('should_equal/2: empty list is equal to any empty list') :-
-	should_equal([],[]).
+	with_output_to(chars(_), should_equal([],[])).
 
 test('should_equal/2: Fails with two unbound variables', fail) :-
-	should_equal( _, _ ).
+	with_output_to(chars(_), should_equal( _, _ )).
 
 test('should_equal/2: two lists with unbound elemnts fail', fail) :-
-	should_equal( [_A,_B], [_C,_D])
+	with_output_to(chars(_), should_equal( [_A,_B], [_C,_D]))
 	.
 test('should_equal/2: with left unbound, right bound should fail', fail ):-
-	should_equal( _A, test_value)
+	with_output_to(chars(_), should_equal( _A, test_value))
 	.
 
 test('should_unify_with/2: with left unbound, right bound should succeed' ):-
-	should_unify_with( _, 12 )
+	with_output_to(chars(_), should_unify_with( _, 12 ))
 	.
 test('should_unify_with/2: with left unbound, right bound list' ):-
-	should_unify_with( _, [12,13,14] )
+	with_output_to(chars(_), should_unify_with( _, [12,13,14] ))
 	.
 
 :- end_tests( testing ).
