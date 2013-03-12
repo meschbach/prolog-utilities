@@ -48,5 +48,17 @@ test('it_next/3: fails at the end', fail) :-
 	it_next( S0, _, _ )
 	.
 
-:- end_tests( iterator ).
+test('range_iterator/3: Fails if Start > End', fail ) :-
+	range( 10, 5, _Iterator)
+	.
+test('range_iterator/3: Initial Value provide start') :-
+	range( 2006, 2010, Iterator ),
+	it_next( Iterator-_I1, 2006 )
+	.
+test('range_iterator/3: Ends at specified value') :-
+	range( 2006, 2007, Iterator ),
+	it_next( Iterator-I0, 2006 ),
+	it_end( I0 )
+	.
 
+:- end_tests( iterator ).

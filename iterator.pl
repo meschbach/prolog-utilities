@@ -16,8 +16,10 @@
  */
 :- module( iterator, [
 	iterator/4,
+	it_next/2,
 	it_next/3,
-	it_end/1
+	it_end/1,
+	range/3
 	]).
 
 /** <module> input Utilities for logical input
@@ -45,4 +47,12 @@ it_end( Source ) :-
 	iterator( Source, _:_, Module:End, State ),
 	call( Module:End, State )
 	.
+
+range( Start, End, Iterator ) :-
+	End >= Start,
+	iterator(Iterator, range_next, range_end( End ), Start)
+	.
+
+range_end( End, End ).
+range_next( Previous, Next, Previous ) :- Next is Previous + 1.
 

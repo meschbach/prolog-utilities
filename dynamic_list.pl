@@ -15,84 +15,45 @@
  *   limitations under the License.
  */
 :- module( dynamic_list, [
-		range/3, 
-		dynamic_list_template/4
+		dynamic_list_template/2
 	]).
+:- use_module( iterator ).
 /** <module> dynamic_list A template to construct lists on the fly 
 
-This module provides a template predicate, dynamic_list_template/4, to generate lists one element at a time.  This prevents a Prolog application from needing to load an entire data stream, or generate an entire list in memory.
-
-An example implementation for creating a list of numbers within an array
-is included as an example.
+Provides a template for converting an iterator into a list.  This is useful for sources
+such as streams, which could incrementally provide values.  In the caes of an incremental stream,
+Prolog would dynamically fill in values as needed.
 
 @author Mark Eschbach
 @license apache2
 */
 
-%% range_has_ended( ?, ?)
+%% dynamic_list_template( ?Iterator, ?List )
 %
-% Boundry check for the top of the list
+% Delcares a list to be fed values dynamically from an array.
 %
-range_has_ended( End, range( Current ) ) :- End < Current.
-
-%% range_iterate( ?PreviousState, ?NextState, ?Value)
+% @param Iterator is the backing geneartor for the list
+% @param List is the list to generate value in
 %
-% If we have not reached the top of the list, we use this predicate to
-% generate the next solution
-%
-range_iterate( 
-	range( Current ),
-	range( Next ),
-	Current
-	) :- 
-	Next is Current + 1
-	.
-
-%% range( +Start, +End, ?List )
-%
-% Creates a new list containing all the elements within the range between
-% Start and End.  Start must be less than or equal to end.
-%
-range( Start, End, List ) :-
-	dynamic_list_template(
-		range_has_ended(End),
-		range_iterate,
-		range( Start ),
-		List
-		).
-
-%% dynamic_list_template( +HasEnded, +Next, ?InitalState, ?List )
-%
-% Delcares a new dynamically growing list.
-%
-% @param HasEnded msut be a predicate accepting the current state as the last parameter.  If this predicate succeeds, then the list will end.
-% @param Next must be a predicate accepting the previous state, the next state, and the resulting value from the transition.
-% @param InitialState is the seed state passed as the 'current' or 'previous' state to get the state machine rolling.
-% @param List is a list containg the elements to be generated.  Elements are generated according to the contract of binding a variable for freeze/2.
-%
-:- meta_predicate dynamic_list_template( 1, 4, ?, -).
-dynamic_list_template( HasEnded, Next, InitialState, List ) :-
+dynamic_list_template( Iterator, List ) :-
 	freeze( List,
 		dynamic_list_iterate(
 			List,
-			dynamic_list_state( HasEnded, Next ),
-			InitialState
+			Iterator
 		)
 	)
 	.
+
 %
-% Attmepts to terminate the given list, if our HasEnded predicate succeeds.
+% Checks to ensure we have not yet reached the end of our list
 %
-dynamic_list_iterate( List, dynamic_list_state(HasEnded, _Next), PreviousState ) :-
-	call(HasEnded, PreviousState),!,
-	List = [].
+dynamic_list_iterate( [], Iterator ) :- it_end( Iterator ).
 %
 % Transitions the given iterator to the next state, capturing binding the next
-% value within the list.
+% value within the list
 %
-dynamic_list_iterate( [H|T], Iterator, PreviousState ) :-
-  Iterator = dynamic_list_state(_IsLast, Next),
-	call(Next, PreviousState, NextState, H),
-	freeze( T, dynamic_list_iterate( T, Iterator, NextState ))
-	.
+dynamic_list_iterate( [H|T], Iterator ) :-
+	it_next( Iterator, Next, H ),
+	freeze( T, dynamic_list_iterate( T, Next ))
+  .
 

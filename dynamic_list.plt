@@ -17,35 +17,23 @@
 :- begin_tests( dynamic_list ).
 :- use_module( dynamic_list ).
 :- use_module( testing ).
+:- use_module( iterator ).
 
-test('range/3: head is start of the range') :-
-	range(1,100,List),
-	List = [H|_],
-	H should_equal 1
-	.
-
-test('range/3: Generate entire range') :-
-	range(1,3, List),
-	List should_unify_with [1,2,3]
-	.
-
-test('range/3: straight list unification') :-
-	range(5, 10, List),
-	List should_unify_with [5,6,7,8,9,10]
-	.
-
-output_done( 2 ).
-output_work( Value, LastState, NextState, Value) :- NextState is LastState + 1.
-
-test('dynamic_list_template/4: Test list usage for output') :-
-	dynamic_list_template( output_done, output_work(Value), 1, List ),
-	List = [H|_],
-	H = test,
-	Value should_equal H
-	.
-test('dynamic_list_template/4: The list is initial unbound') :-
-	dynamic_list_template( output_done, output_work(_), 1, List),
+test('dynamic_list_template/2: Provides an unbound list') :-
+	range(1, 10, Iterator),
+	dynamic_list_template( Iterator, List ),
 	var(List)
+	.
+test('dynamic_list_template/2: Unifies with expected value') :-
+	range(1, 10, Iterator),
+	dynamic_list_template( Iterator, List ),
+	List = [H|_],
+	H should_unify_with 1
+	.
+test('dynamic_list_template/2: Unifies with entire list') :-
+	range(2, 8, Iterator),
+	dynamic_list_template( Iterator, List ),
+	List should_unify_with [2,3,4,5,6,7]
 	.
 
 :- end_tests( dynamic_list).
