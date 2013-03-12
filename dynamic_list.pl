@@ -36,6 +36,7 @@ Prolog would dynamically fill in values as needed.
 % @param List is the list to generate value in
 %
 dynamic_list_template( Iterator, List ) :-
+	ground(Iterator),
 	freeze( List,
 		dynamic_list_iterate(
 			List,

@@ -35,6 +35,13 @@ test('dynamic_list_template/2: Unifies with entire list') :-
 	dynamic_list_template( Iterator, List ),
 	List should_unify_with [2,3,4,5,6,7]
 	.
+test('dynamic_list_template/2: Given list, provides an iterator', fail) :-
+	dynamic_list_template( Iterator, [test, from, list] ),
+	it_next( Iterator-I0, test ),
+	it_next( I0-I1, from ),
+	it_next( I1-I2, list ),
+	it_end( I2 )
+	.
 
 :- end_tests( dynamic_list).
 
