@@ -19,6 +19,8 @@
 	it_next/2,
 	it_next/3,
 	it_end/1,
+	is_iterator/1,
+	state/2,
 	range/3
 	]).
 
@@ -31,7 +33,7 @@
 :- meta_predicate iterator( ?, 3, 2, ? ).
 %% iterator( ?Source, :Read, :End, ?State ) is det.
 iterator( Source, ReadModule:ReadOp, EndModule:EndOp, State ) :-
-	Source = source( ReadModule:ReadOp, EndModule:EndOp, State ) 
+	Source = iterator( ReadModule:ReadOp, EndModule:EndOp, State )
 	.
 
 it_next( S0-S1, Value ) :- it_next( S0, S1, Value ). 
@@ -47,6 +49,9 @@ it_end( Source ) :-
 	iterator( Source, _:_, Module:End, State ),
 	call( Module:End, State )
 	.
+
+is_iterator( Iterator ) :- Iterator = iterator(_:_,_:_,_).
+state( Iterator, Context ) :- Iterator = iterator( _:_, _:_, Context ).
 
 range( Start, End, Iterator ) :-
 	End >= Start,

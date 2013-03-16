@@ -30,9 +30,9 @@
 write_list( List ) :-
 	write('['), write_list_element( List, ' ' ).
 
-write_list_element( [], _ ) :- write(']').
+write_list_element( [], _ ) :- write(']'), !.
 write_list_element( [H|T], Separator ) :-
 	write(Separator),
-	write(H),
+	writeq(H),!,
 	write_list_element(T, ',')
 	.

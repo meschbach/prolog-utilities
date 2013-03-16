@@ -43,5 +43,20 @@ test('dynamic_list_template/2: Given list, provides an iterator', fail) :-
 	it_end( I2 )
 	.
 
+test('dynamic_list_template/2: Unifies to materialized list') :-
+	range(5,10,Iterator ),
+	dynamic_list_template( Iterator, List),!,
+	[5,6,7,8,9] should_unify_with List
+	.
+
+ranged( [5,6,7] ).
+ranged( [5,6,7,8,9] ).
+
+test('dynamic_list_template/2: Backtracking supported') :-
+	range(5,10,Iterator ),
+	dynamic_list_template( Iterator, List),!,
+	ranged( List )
+	.
+
 :- end_tests( dynamic_list).
 

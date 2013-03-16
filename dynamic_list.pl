@@ -48,13 +48,13 @@ dynamic_list_template( Iterator, List ) :-
 %
 % Checks to ensure we have not yet reached the end of our list
 %
-dynamic_list_iterate( [], Iterator ) :- it_end( Iterator ).
+dynamic_list_iterate( [], Iterator ) :- it_end( Iterator ), !.
 %
 % Transitions the given iterator to the next state, capturing binding the next
 % value within the list
 %
 dynamic_list_iterate( [H|T], Iterator ) :-
-	it_next( Iterator, Next, H ),
+	it_next( Iterator, Next, H ),!,
 	freeze( T, dynamic_list_iterate( T, Next ))
   .
 

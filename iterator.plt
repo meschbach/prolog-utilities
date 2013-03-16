@@ -16,6 +16,7 @@
  */
 :- begin_tests( iterator ).
 :- use_module( iterator ).
+:- use_module( testing ).
 
 test_source_capture( Value, Value, [], Value ).
 test_source_end( Value, Value ).
@@ -46,6 +47,15 @@ test('it_end/1: calls end predicate') :-
 test('it_next/3: fails at the end', fail) :-
 	iterator( S0, test_source_list, test_source_list_end, []),
 	it_next( S0, _, _ )
+	.
+test('is_iterator/1: true with an iterator') :-
+	iterator( Iterator, fail, fail, fail ),
+	is_iterator( Iterator )
+	.
+test('state/2: returns the iterator context') :-
+	range( 5, 10, Iterator ),
+	iterator:state( Iterator, State ),!,
+	State should_equal 5
 	.
 
 test('range_iterator/3: Fails if Start > End', fail ) :-

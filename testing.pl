@@ -17,6 +17,8 @@
 :- module( testing, [
 		should_equal/2,
 		should_unify_with/2,
+		alphabet_file/1,
+		zebra_file/1,
 		op( 100, xfy, should_equal ),
 		op( 100, xfy, should_unify_with )
 	]).
@@ -60,17 +62,31 @@ should_equal( A, B ) :-
 	!, fail
 	.
 write_failure( [] ).
-write_failure( [H|T] ) :- write( H ), write_failure(T).
+write_failure( [H|T] ) :- writeq( H ), write_failure(T).
 
 %% should_unify_with( ?, ? )
 %
 % Ensures the two given variables may be unified
 %
+should_unify_with( A, B ) :-
+	( is_list(A) ; is_list( B ) ),
+	(
+		should_unify_elements( A, B )
+	;
+		write('Expected '), write_list( A ), write(' should unify with '), write_list( B )
+	), !
+	.
+
 should_unify_with( A, B ) :- A = B, !.
 should_unify_with( A, B ) :-
-	write(' Expected '), write(A), write(' got '), write( B ),
+	write(' Expected '), writeq( A ), write(' should unify with '), writeq( B ), !,
 	fail
 	.
+
+should_unify_elements( [], [] ) :- !.
+should_unify_elements( [], _ ) :- !, fail.
+should_unify_elements( _, [] ) :- !, fail.
+should_unify_elements( [H0|T0], [H1|T1] ) :- H0 = H1, should_unify_elements( T0, T1 ).
 
 %
 % Ensure the elments of a given list are equal
@@ -83,3 +99,9 @@ elements_should_equal( [H1|T1], [H2|T2] ) :-
 	elements_should_equal( T1, T2 )
 	.
 
+alphabet_file( Stream ) :-
+	open('test/file-source-0', read, Stream )
+	.
+zebra_file( Stream ) :-
+	open('test/file-source-1', read, Stream )
+	.

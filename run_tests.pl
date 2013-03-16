@@ -14,10 +14,13 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+:- use_module( testing ).
 :- use_module( iterator ).
 :- use_module( dynamic_list ).
-:- use_module( testing ).
+:- use_module( pure_input ).
 :- use_module( service_template ).
+:- use_module( input ).
+:- use_module( monad ).
 
 %
 % Runs all tests
