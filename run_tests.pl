@@ -22,6 +22,7 @@
 :- use_module( service_template ).
 :- use_module( input ).
 :- use_module( monad ).
+:- use_module( bytes ).
 
 %
 % Runs all tests
