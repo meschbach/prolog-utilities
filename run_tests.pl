@@ -15,6 +15,7 @@
  *   limitations under the License.
  */
 :- use_module( testing ).
+:- use_module( list_ops ).
 :- use_module( iterator ).
 :- use_module( dynamic_list ).
 :- use_module( pure_input ).
