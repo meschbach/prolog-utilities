@@ -72,5 +72,21 @@ test('pure_input:byte_iterator/2: backtracking works', [
 		byte_iterator( Stream, Iterator ),!,
 		byte_backtracking( Iterator )
 	.
+
+/***************************************
+ * Bucket Iterator  
+ **************************************/
+test('bucket_iterator: gives empty iterator with empty list' ) :-
+	bucket_iterator( [], Iterator ),!,
+	it_end( Iterator )
+	.
+test('bucket_iterator: provides given length of bucket' ) :-
+	Example = [0,1,2,3,4,5,6,7,8,9,10,11],
+	bytes:network_uint32( 12, Header ),
+	append( Header, Example, Bytes ),
+	bucket_iterator( Bytes, Iterator ),!,
+	it_next( Iterator-_, Result ), !,
+	Result should_unify_with Example
+	.
 :- end_tests( pure_input ).
 

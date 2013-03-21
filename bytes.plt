@@ -52,17 +52,25 @@ test('bytes/1: All invalid', fail) :-
 test('bytes/1: mixed of valid and invalid', fail) :-
 	bytes([127, 15, 12, 18, 256]).
 
+/* domain functionality */
+test('bytes/1: with unbound values') :-
+	bytes([X,Y,Z,128]),
+	X = 8,
+	Y = 20,
+	Z = 6
+	.
+
 /***************************************
  * Converting a series of a bytes within
  * a list into an integer
  **************************************/
-test('network_uint32/3: bytes 0x01 to integer works') :-
-	network_uint32( Result, [0,0,0,1], []),!,
+test('network_uint32/2: bytes 0x01 to integer works') :-
+	network_uint32( Result, [0,0,0,1]),!,
 	Result should_unify_with 1
 	.
-test('network_uint32/3: bytes 0xf0 << 24 to integer works') :-
+test('network_uint32/2: bytes 0xf0 << 24 to integer works') :-
 	Expected is 0xf0 << 24,
-	network_uint32( Result, [0xf0, 0, 0, 0], []),!,
+	network_uint32( Result, [0xf0, 0, 0, 0] ),!,
 	Result should_unify_with Expected
 	.
 test('network_uint32/3: bytes 0xf0 << 24 to integer leaves remaining bytes') :-
@@ -75,10 +83,12 @@ test('network_uint32/3: bytes 0xf0 << 24 to integer leaves remaining bytes') :-
  * uint32 bytes
  **************************************/
 test('network_uint32/3: Convert 0 into a series of bytes') :-
-	network_uint32( 0, [0, 0, 0, 0], [])
+	network_uint32( 0, Value ),!,
+	Value should_unify_with [0, 0, 0, 0]
 	.
 test('network_uint32/3: Convert 256 into a series of bytes') :-
-	network_uint32( 256, [0, 0, 1, 0], [])
+	network_uint32( 256, Value ),!,
+	Value should_unify_with [0, 0, 1, 0]
 	.
 
 :- end_tests( bytes ).

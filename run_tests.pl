@@ -16,13 +16,13 @@
  */
 :- use_module( testing ).
 :- use_module( list_ops ).
+:- use_module( bytes ).
 :- use_module( iterator ).
 :- use_module( dynamic_list ).
 :- use_module( pure_input ).
 :- use_module( service_template ).
 :- use_module( input ).
 :- use_module( monad ).
-:- use_module( bytes ).
 
 %
 % Runs all tests

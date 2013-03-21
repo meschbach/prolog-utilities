@@ -18,6 +18,7 @@
 		byte/1,
 		byte_domain/1,
 		bytes/1,
+		network_uint32/2,
 	  network_uint32/3
 	]).
 /** <module> bytes A module for manipulating lists bytes 
@@ -36,24 +37,37 @@ byte( Value ) :- ground(Value), -1 < Value, Value < 256.
 byte_domain( Value ) :- freeze( Value, byte(Value) ). 
 
 bytes( [] ).
-bytes( [H|T] ) :- byte(H), bytes(T).
+bytes( [H|T] ) :- byte_domain(H), bytes(T).
 
-%% network_uint32( +Uint32, -Input, +Remainder ) is det.
+%% network_uint32( +Uint32, -Bytes ) is det.
 %
-% Converts between an integer within the domain of a 32-bit unsigned integer
-% and the first four bytes of Input, providing the tail in Remainder.
+% Converts between Uint32 and network byte order
+% of Bytes.
 %
-network_uint32( Uint32,
-		Input,
-		Remainder 
-	) :-
-		Bytes = [Byte0, Byte1, Byte2, Byte3],
-		append( Bytes, Remainder, Input ),
-		bytes( Bytes ),
-		Uint32 is 
+network_uint32( Uint32, Bytes ) :-
+	Bytes = [Byte0, Byte1, Byte2, Byte3],
+	bytes( Bytes ),
+	(
+		ground( Bytes ),
+		Uint32 is
 			( Byte0 << 24
 			\/ Byte1 << 16
 			\/ Byte2 << 8
 			\/ Byte3
 			)
+	;
+		ground( Uint32 ),
+		Byte0 is (Uint32 >> 24) /\ 0xff,
+		Byte1 is (Uint32 >> 16) /\ 0xff,
+		Byte2 is (Uint32 >> 8) /\ 0xff,
+		Byte3 is Uint32 /\ 0xff
+	)
 	.
+network_uint32( Uint32,
+		Input,
+		Remainder 
+	) :-
+		append( Bytes, Remainder, Input ),
+		network_uint32( Uint32, Bytes )
+	.
+
