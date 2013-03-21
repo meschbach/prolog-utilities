@@ -16,6 +16,7 @@
  */
 :- module( bytes, [
 		byte/1,
+		byte_domain/1,
 		bytes/1,
 	  network_uint32/3
 	]).
@@ -26,7 +27,14 @@
  */
 :- use_module( list_ops ).
 
-byte( Value ) :- -1 < Value, Value < 256.
+%% byte( -Value ) is det.
+%
+% Determines if the given integer is within the bounds of a
+% byte (8-bit octet).
+%
+byte( Value ) :- ground(Value), -1 < Value, Value < 256.
+byte_domain( Value ) :- freeze( Value, byte(Value) ). 
+
 bytes( [] ).
 bytes( [H|T] ) :- byte(H), bytes(T).
 

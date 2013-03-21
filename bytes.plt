@@ -18,6 +18,9 @@
 :- use_module( bytes ).
 :- use_module( testing ).
 
+/***************************************
+ * Byte domains
+ **************************************/
 test('byte/1: with good value') :-
 	byte( 128 )
 	.
@@ -30,6 +33,18 @@ test('byte/1: with maximum value') :-
 test('byte/1: beyond maximum', fail) :- byte(256).
 test('byte/1: below minimum', fail) :- byte(-1).
 
+/***************************************
+ * Byte Domains
+ **************************************/
+test('byte_domain/1: with unbound -> succeeds when within domain') :-
+	byte_domain(A),
+	A = 127 
+	.
+
+/***************************************
+ * Verify a given list contains a
+ * series of bytes
+ **************************************/
 test('bytes/1: All valid') :-
 	bytes([128,0,255]).
 test('bytes/1: All invalid', fail) :-
@@ -37,6 +52,10 @@ test('bytes/1: All invalid', fail) :-
 test('bytes/1: mixed of valid and invalid', fail) :-
 	bytes([127, 15, 12, 18, 256]).
 
+/***************************************
+ * Converting a series of a bytes within
+ * a list into an integer
+ **************************************/
 test('network_uint32/3: bytes 0x01 to integer works') :-
 	network_uint32( Result, [0,0,0,1], []),!,
 	Result should_unify_with 1
@@ -51,6 +70,10 @@ test('network_uint32/3: bytes 0xf0 << 24 to integer leaves remaining bytes') :-
 	Remainder should_unify_with [100, 200]
 	.
 
+/***************************************
+ * Converting an integer into a network
+ * uint32 bytes
+ **************************************/
 test('network_uint32/3: Convert 0 into a series of bytes') :-
 	network_uint32( 0, [0, 0, 0, 0], [])
 	.
