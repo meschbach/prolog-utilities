@@ -42,4 +42,35 @@ test('pure_input:character_iterator/2: Backtrack test',[
 	it_next( Iterator-I0, z ),
 	backtrack_test( I0 )
 	.
+
+test('pure_input:byte_iterator/2: recieves expected values', [
+		setup( binary_zebra_file( Stream ) ),
+		cleanup( close( Stream ) )
+	]) :-
+		atom_codes( z, [ZCode] ),
+		byte_iterator( Stream, Iterator ),!,
+		it_next( Iterator-_, Byte ), 
+		Byte should_unify_with ZCode 
+	.
+
+byte_backtracking_template( State, ExpectedAtom ) :-
+	atom_codes( ExpectedAtom, [Expected] ),!,
+	it_next( State-_, Value ),
+	Value = Expected
+	.
+byte_backtracking( State ) :-
+	byte_backtracking_template( State, a )
+	.
+byte_backtracking( State ) :-
+	byte_backtracking_template( State, z )
+	.
+
+test('pure_input:byte_iterator/2: backtracking works', [
+		setup( binary_zebra_file( Stream ) ),
+		cleanup( close( Stream ) )
+	]) :-
+		byte_iterator( Stream, Iterator ),!,
+		byte_backtracking( Iterator )
+	.
 :- end_tests( pure_input ).
+

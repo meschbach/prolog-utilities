@@ -19,6 +19,7 @@
 		should_unify_with/2,
 		alphabet_file/1,
 		zebra_file/1,
+		binary_zebra_file/1,
 		op( 100, xfy, should_equal ),
 		op( 100, xfy, should_unify_with )
 	]).
@@ -104,4 +105,8 @@ alphabet_file( Stream ) :-
 	.
 zebra_file( Stream ) :-
 	open('test/file-source-1', read, Stream )
+	.
+binary_zebra_file( Stream ) :-
+	zebra_file( Stream ),
+	set_stream( Stream, type(binary) )
 	.

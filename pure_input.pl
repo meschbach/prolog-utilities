@@ -15,7 +15,8 @@
  *   limitations under the license.
  */
 :- module( pure_input, [
-		character_iterator/2
+		character_iterator/2,
+		byte_iterator/2
 	]).
 /** <module> pure_input Pure logical input streams 
 
@@ -28,5 +29,9 @@
 character_iterator( Stream, Iterator ) :-
 	stream_as_characters( Stream, Imperative ),
 	monad_iterator( Imperative, Stream, Iterator )
+	.
+byte_iterator( Stream, Iterator ) :-
+	stream_as_bytes( Stream, Imperative ),
+	monad_iterator( Imperative, Stream, Iterator)
 	.
 

@@ -49,7 +49,7 @@ monad_iterator( Iterator, Name, MonadicIterator ) :-
 	iterator( MonadicIterator, monad_next, monad_done, Monad )
 	.
 abolish_iterator( Iterator ) :-
-	iterator:context( Iterator, Monad ),
+	iterator:state( Iterator, Monad ),
 	abolish_monad( Monad )
 	.
 

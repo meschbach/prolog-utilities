@@ -20,21 +20,21 @@
 :- use_module( testing ).
 :- use_module( dynamic_list ).
 
-test('source_as_characters/2: Builds an iterator', [
+test('stream_as_characters/2: Builds an iterator', [
 		setup( alphabet_file( Stream ) ),
 		cleanup( close( Stream ) )
 	]) :-
 		stream_as_characters( Stream, Iterator ),
 		is_iterator( Iterator )
 	.
-test('source_as_characters/2: Grounds the iterator', [
+test('stream_as_characters/2: Grounds the iterator', [
 		setup( alphabet_file( Stream ) ),
 		cleanup( close( Stream ) )
 	]) :-
 		stream_as_characters( Stream, Iterator ),
 		ground(Iterator)
 	.
-test('source_as_characters/2 with alphabet: provides first character',[
+test('stream_as_characters/2 with alphabet: provides first character',[
 		setup( alphabet_file( Stream ) ),
 		cleanup( close( Stream ) )
 	]) :-
@@ -43,7 +43,7 @@ test('source_as_characters/2 with alphabet: provides first character',[
 		a should_unify_with Character
 	.
 
-test('source_as_characters/2 with zebra: Provides first character', [
+test('stream_as_characters/2 with zebra: Provides first character', [
 			setup( zebra_file( Stream ) ),
 			cleanup( close( Stream ) )
 		]) :-
@@ -52,7 +52,7 @@ test('source_as_characters/2 with zebra: Provides first character', [
 	z should_unify_with Character
 	.
 
-test('source_as_characters/2 with zebra: Provides entire file',[
+test('stream_as_characters/2 with zebra: Provides entire file', [
 			setup( zebra_file( Stream ) ),
 			cleanup( close( Stream ) )
 		]) :-
@@ -62,5 +62,15 @@ test('source_as_characters/2 with zebra: Provides entire file',[
 	[z,e,b,r,a,'\n'] should_unify_with List
 	.
 
+test('stream_as_bytes/2 with zebra: Provides entire file', [
+		setup( binary_zebra_file( Stream ) ),
+		cleanup( close( Stream ) )
+	]) :-
+	stream_as_bytes( Stream, Iterator ),
+	dynamic_list_template( Iterator, List ),
+	atom_codes('zebra\n', Bytes ),
+	!,
+	List should_unify_with Bytes
+	.
 :- end_tests( input ).
 

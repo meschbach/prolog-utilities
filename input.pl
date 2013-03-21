@@ -15,7 +15,8 @@
  *   limitations under the license.
  */
 :- module( input, [
-		stream_as_characters/2
+		stream_as_characters/2,
+		stream_as_bytes/2
 	]).
 /** <module> input Common operations for managing input
 
@@ -38,4 +39,17 @@ end_of_character_stream(
 		character_stream( Stream ) 
 	) :-
 	at_end_of_stream( Stream ).
+
+stream_as_bytes( Stream, Iterator ) :-
+	State = byte_stream( Stream ),
+	iterator( Iterator, read_byte_stream, end_of_byte_stream, State )
+	.
+read_byte_stream(
+		byte_stream( Stream ),
+		byte_stream( Stream ),
+		Byte
+	) :-
+		get_byte( Stream, Byte )
+	.
+end_of_byte_stream( byte_stream( Stream ) ) :- at_end_of_stream( Stream ).
 
