@@ -30,13 +30,18 @@ byte( Value ) :- -1 < Value, Value < 256.
 bytes( [] ).
 bytes( [H|T] ) :- byte(H), bytes(T).
 
+%% network_uint32( +Uint32, -Input, +Remainder ) is det.
+%
+% Converts between an integer within the domain of a 32-bit unsigned integer
+% and the first four bytes of Input, providing the tail in Remainder.
+%
 network_uint32( Uint32,
 		Input,
 		Remainder 
 	) :-
-		sublist( Input, 4, Bytes, Remainder ),
-		bytes( Bytes ),
 		Bytes = [Byte0, Byte1, Byte2, Byte3],
+		append( Bytes, Remainder, Input ),
+		bytes( Bytes ),
 		Uint32 is 
 			( Byte0 << 24
 			\/ Byte1 << 16
